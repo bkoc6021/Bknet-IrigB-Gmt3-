@@ -20,7 +20,9 @@
       text-align: center;
       position: relative;
       user-select: none;
+      overflow: hidden;
     }
+
     .logo {
       position: absolute;
       top: 20px;
@@ -28,11 +30,13 @@
       height: 120px;
       width: auto;
     }
+
     .time {
       font-size: 9em;
       letter-spacing: 4px;
       margin-top: -50px;
     }
+
     .info {
       font-size: 1.4em;
       color: red;
@@ -43,6 +47,7 @@
       bottom: 70px;
       text-align: left;
     }
+
     .clickmsg {
       position: absolute;
       bottom: 20px;
@@ -51,20 +56,42 @@
       font-weight: normal;
     }
 
-    /* Dikey modda kullanıcıya uyarı göstermek için (isteğe bağlı) */
+    /* 📱 Dikey modda sadece uyarı göster */
     @media screen and (orientation: portrait) {
+      body > * { display: none !important; }
       body::before {
-        content: "📱 Lütfen telefonu yatay çevirin (landscape mod)";
+        content: "📱 Lütfen telefonu yatay çevirin (yatay mod)";
         position: fixed;
         inset: 0;
         background: white;
         color: red;
-        font-size: 1.2em;
+        font-size: 1.5em;
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
         text-align: center;
+        padding: 20px;
+      }
+    }
+
+    /* 🔄 Küçük ekran (mobil yatay) için uyarlama */
+    @media screen and (max-width: 900px) and (orientation: landscape) {
+      .logo {
+        top: 10px;
+        left: 10px;
+        height: 60px;
+      }
+      .time {
+        font-size: 4.5em;
+        margin-top: 0;
+      }
+      .info {
+        font-size: 1em;
+        bottom: 60px;
+        padding: 10px 20px;
+      }
+      .clickmsg {
+        font-size: 0.9em;
       }
     }
   </style>
@@ -104,7 +131,7 @@ setInterval(updateTime,1000);updateTime();
     osc.type="sine";osc.frequency.value=1000;
     gain.gain.value=0;osc.connect(gain);gain.connect(ctx.destination);
     osc.start();
-    nextFrameTime=ctx.currentTime+0.05; // 50 ms başlangıç gecikmesi
+    nextFrameTime=ctx.currentTime+0.05;
   }
 
   const onLen=b=>(ON_MS[b]||2)/1000;
@@ -148,11 +175,11 @@ setInterval(updateTime,1000);updateTime();
   function loop(){
     if(!run)return;
     const now=ctx.currentTime;
-    while(nextFrameTime<now+1.2){ // 1.2 s önden planla
+    while(nextFrameTime<now+1.2){
       const date=new Date(Date.now()+ (nextFrameTime-ctx.currentTime)*1000);
       const frame=makeFrame(date);
       scheduleFrame(frame,nextFrameTime);
-      nextFrameTime+=1.0; // her frame 1 s
+      nextFrameTime+=1.0;
     }
     requestAnimationFrame(loop);
   }
@@ -170,19 +197,20 @@ setInterval(updateTime,1000);updateTime();
     try{osc.stop()}catch{}
     try{ctx.close()}catch{}
     ctx=osc=gain=null;
+    document.getElementById("clickmsg").style.display="block";
+    console.log("IRIG-B SES DURDU");
   }
 
-  document.addEventListener("click",()=>{if(!run)start();});
+  // 🎯 Masaüstü tıklama & dokunma kontrolü
+  document.addEventListener("click",()=>{run?stop():start();});
+  document.body.addEventListener("touchstart",()=>{run?stop():start();},{passive:true});
   document.addEventListener("keydown",e=>{
     if(e.code==="Space"){e.preventDefault();run?stop():start();}
   });
   document.addEventListener("dblclick",()=>{run?stop():start();});
-
-  // 📱 Telefonda dokununca ses başlasın
-  document.body.addEventListener("touchstart",()=>{if(!run)start();},{passive:true});
-
 })();
 </script>
 
 </body>
 </html>
+
