@@ -64,7 +64,7 @@
     line-height: 1.5em;
     position: absolute;
     bottom: 70px;
-    text-align: center; /* Ortala */
+    text-align: center;
   }
 
   .clickmsg {
@@ -77,7 +77,6 @@
     width: 100%;
   }
 
-  /* Telefon dikey mod uyarısı */
   .rotate-warning {
     position: fixed;
     top: 50%;
@@ -94,7 +93,7 @@
     display: none;
   }
 
-  /* Mobil uyumlu ve dikey mod kontrolü */
+  /* Mobil uyumlu */
   @media screen and (max-width: 900px) {
     .logo, .flag-video {
       height: 60px;
@@ -105,7 +104,6 @@
     .info {
       font-size: 1em;
     }
-    /* Dikey modda göster */
     @media (orientation: portrait) {
       .rotate-warning {
         display: block;
@@ -116,12 +114,10 @@
 </head>
 <body>
 
-<!-- Telefon dikey mod uyarısı -->
 <div class="rotate-warning" id="rotateWarning">
   Lütfen telefonu yatay hale getiriniz
 </div>
 
-<!-- Üst logo ve bayrak -->
 <div class="top-bar">
   <img src="UYDU .png" alt="Logo" class="logo">
   <video class="flag-video" autoplay muted loop playsinline>
@@ -130,7 +126,6 @@
   </video>
 </div>
 
-<!-- Saat tam ortada -->
 <div class="time-container">
   <div class="time" id="time"></div>
 </div>
@@ -154,7 +149,7 @@
   }
   setInterval(updateTime,1000); updateTime();
 
-  /* === KESİNTİSİZ IRIG-B SES MOTORU === */
+  /* === IRIG-B SES MOTORU === */
   (() => {
     let ctx, osc, gain, run=false, nextFrameTime=0;
     const SLOT_MS=10, ON_MS={"0":2,"1":5,"P":8};
@@ -234,18 +229,23 @@
       ctx=osc=gain=null;
     }
 
-    // Dokununca başlat/durdur ve dikey mod kontrolü
+    function requestFullscreen() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      else if (el.msRequestFullscreen) el.msRequestFullscreen();
+    }
+
+    // Tek dokunuşla başlat/durdur ve tam ekran
     function startStopAudio() {
       const rotateWarning = document.getElementById("rotateWarning");
       if (window.innerWidth < window.innerHeight) {
         alert("Lütfen telefonu yatay hale getiriniz");
         return;
       }
-      if (!run) {
-        start();
-      } else {
-        stop();
-      }
+      requestFullscreen();
+      if (!run) start();
+      else stop();
     }
 
     document.addEventListener("click", startStopAudio);
