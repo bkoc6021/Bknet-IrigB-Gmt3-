@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TÜRKİYE CUMHURİYETİ BURAK KOÇ HİBRİT UYDUSUNUN ULUSLARARASI IRIG-B SAATİ</title>
+<title>TÜRKİYE CUMHURİYETİ BURAK KOÇ İNTERNET UYDUSU GMT-3 IRIG-B SAATİ</title>
 <style>
   body {
     background-color: white;
@@ -53,7 +53,7 @@
   .time {
     font-size: 9em;
     letter-spacing: 4px;
-    margin-bottom: 20px; /* Saat ile kırmızı yazı arası boşluk */
+    margin-bottom: 40px; /* Saat ile kırmızı yazı arası boşluk */
   }
 
   .info {
@@ -96,6 +96,7 @@
     }
     .time {
       font-size: 6em;
+      margin-bottom: 20px; /* Küçük ekranlarda boşluk daha az */
     }
     .info {
       font-size: 1em;
@@ -132,7 +133,7 @@
   </div>
 </div>
 
-<div class="clickmsg" id="clickmsg">IRIG-B saatinin başlatmak için tıklayın.</div>
+<div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
 
 <script>
   /* === EKRAN SAATİ === */
@@ -236,7 +237,7 @@
     function startStopAudio() {
       const rotateWarning = document.getElementById("rotateWarning");
       if (window.innerWidth < window.innerHeight) {
-        alert("Lütfen cihazınızı yatay hale getiriniz.");
+        alert("Lütfen telefonu yatay hale getiriniz");
         return;
       }
       requestFullscreen();
