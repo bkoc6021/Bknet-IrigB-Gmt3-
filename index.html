@@ -67,7 +67,15 @@
     text-align: center;
     width: 100%;
   }
-
+/* Mobil yatay mod: yazıların üst üste gelmemesi ve ortalanması */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+    .info {
+        font-size: 1em;
+        bottom: 60px;      /* alt kırmızı yazının pozisyonu */
+        text-align: center; /* ortala */
+        width: 90%;         /* kenarlardan boşluk bırak */
+        margin: 0 auto;
+    }
   .clickmsg {
     position: absolute;
     bottom: 20px;
@@ -93,6 +101,40 @@
 </style>
 </head>
 <body>
+  <body>
+
+  <!-- Telefon dikey mod uyarısı -->
+  <div class="rotate-warning" id="rotateWarning">
+    Lütfen telefonu yatay hale getiriniz
+  </div>
+
+  <!-- Üst bar: logo ve video -->
+  <div class="top-bar">
+    <img src="UYDU .png" alt="Logo" class="logo">
+    <video class="flag-video" autoplay muted loop playsinline>
+      <source src="turkbayragi.mp4" type="video/mp4">
+      Tarayıcınız video etiketini desteklemiyor.
+    </video>
+  </div>
+
+  <!-- Saat tam ortada -->
+  <div class="time-container">
+    <div class="time" id="time"></div>
+  </div>
+
+  <!-- Alt bilgiler ve başlatma mesajı -->
+  <div class="info">
+    SES TONUNDA SAAT BİLGİSİ İLETİLMEKTEDİR. RECEIVER SES ÇIKIŞI IRIG-B UYUMLU SAATLERE
+    VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
+    BİLGİLENDİRME AMAÇLIDIR.
+  </div>
+
+  <div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
+
+<!-- Yatay mod uyarısı -->
+<div class="rotate-warning" id="rotateWarning">
+  Lütfen telefonu yatay hale getiriniz
+</div>
 
 <!-- Üst logo ve bayrak -->
 <div class="top-bar">
@@ -115,6 +157,7 @@
 </div>
 
 <div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
+
 
 <script>
   /* === EKRAN SAATİ === */
@@ -218,4 +261,5 @@
 
 </body>
 </html>
+
 
