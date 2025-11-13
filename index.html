@@ -1,207 +1,208 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TÜRKİYE CUMHURİYETİ BURAK KOÇ İNTERNET UYDUSU GMT-3 IRIG-B SAATİ</title>
-<style>
-  body {
-    background-color: white;
-    color: black;
-    font-family: "Times New Roman";
-    font-weight: bold;
-    margin: 0;
-    user-select: none;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Üst bölüm: logo, saat, video */
-  .top-bar {
-    position: relative;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-
-  .logo {
-    height: 120px;
-    width: auto;
-    flex-shrink: 0;
-  }
-
-  .time {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 9em;
-    letter-spacing: 4px;
-    white-space: nowrap;
-  }
-
-  .flag-video {
-    height: 120px;
-    width: auto;
-    flex-shrink: 0;
-    border-radius: 0; /* sivri kenarlar */
-  }
-
-  /* Kırmızı bilgi yazısı ortada */
-  .info {
-    font-size: 1.4em;
-    color: red;
-    max-width: 1000px;
-    padding: 10px 30px;
-    line-height: 1.5em;
-    text-align: center;
-    margin-top: 250px; /* üstten boşluk */
-  }
-
-  .clickmsg {
-    color: gray;
-    font-size: 1em;
-    font-weight: normal;
-    margin-top: 20px;
-  }
-
-  /* Mobil uyumlu */
-  @media screen and (max-width: 900px) {
-    .logo, .flag-video {
-      height: 60px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TÜRKİYE CUMHURİYETİ BURAK KOÇ İNTERNET UYDUSU GMT-3 IRIG-B SAATİ</title>
+  <style>
+    body {
+      background-color: white;
+      color: black;
+      font-family: "Times New Roman";
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      position: relative;
+      user-select: none;
     }
+
+    /* Header: logo, saat, bayrak */
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      height: 120px;
+      width: auto;
+      flex-shrink: 0;
+    }
+
     .time {
-      font-size: 6em;
+      font-size: 9em;
+      letter-spacing: 4px;
+      margin: 0;
+      flex-grow: 1;
+      text-align: center;
     }
+
+    /* Türk bayrağı videosu sağda */
+    .flag-video {
+      height: 120px;
+      width: auto;
+      flex-shrink: 0;
+      border-radius: 0; /* kenarlar sivri */
+    }
+
     .info {
-      font-size: 1em;
+      font-size: 1.4em;
+      color: red;
+      max-width: 1000px;
+      padding: 10px 30px;
+      line-height: 1.5em;
+      position: absolute;
+      bottom: 70px;
+      text-align: left;
     }
-  }
-</style>
+
+    .clickmsg {
+      position: absolute;
+      bottom: 20px;
+      color: gray;
+      font-size: 1em;
+      font-weight: normal;
+    }
+
+    /* Mobil uyumlu: yatay modda küçültme */
+    @media screen and (max-width: 900px) and (orientation: landscape) {
+      .logo, .flag-video {
+        height: 60px;
+      }
+      .time {
+        font-size: 6em;
+      }
+      .info {
+        font-size: 1em;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="header">
+    <img src="UYDU .png" alt="Logo" class="logo">
+    <div class="time" id="time"></div>
+    <video class="flag-video" autoplay muted loop playsinline>
+      <source src="turkbayragi.mp4" type="video/mp4">
+      Tarayıcınız video etiketini desteklemiyor.
+    </video>
+  </div>
 
-<div class="top-bar">
-  <img src="UYDU .png" alt="Logo" class="logo">
-  <div class="time" id="time"></div>
-  <video class="flag-video" autoplay muted loop playsinline>
-    <source src="turkbayragi.mp4" type="video/mp4">
-    Tarayıcınız video etiketini desteklemiyor.
-  </video>
-</div>
+  <div class="info">
+    SES TONUNDA SAAT BİLGİSİ İLETİLMEKTEDİR. RECEIVER SES ÇIKIŞI IRIG-B UYUMLU SAATLERE
+    VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
+    BİLGİLENDİRME AMAÇLIDIR.
+  </div>
 
-<div class="info">
-  SES TONUNDA SAAT BİLGİSİ İLETİLMEKTEDİR. RECEIVER SES ÇIKIŞI IRIG-B UYUMLU SAATLERE
-  VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
-  BİLGİLENDİRME AMAÇLIDIR.
-</div>
+  <div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
 
-<div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
-
-<script>
-  /* === EKRAN SAATİ === */
-  function updateTime() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    document.getElementById("time").textContent = `${h}:${m}:${s}`;
-  }
-  setInterval(updateTime, 1000);
-  updateTime();
-
-  /* === KESİNTİSİZ IRIG-B SES MOTORU === */
-  (() => {
-    let ctx, osc, gain, run = false, nextFrameTime = 0;
-    const SLOT_MS=10, ON_MS={"0":2,"1":5,"P":8};
-
-    function init(){
-      if(ctx) return;
-      ctx=new (window.AudioContext||window.webkitAudioContext)();
-      osc=ctx.createOscillator(); gain=ctx.createGain();
-      osc.type="sine"; osc.frequency.value=1000;
-      gain.gain.value=0; osc.connect(gain); gain.connect(ctx.destination);
-      osc.start();
-      nextFrameTime=ctx.currentTime+0.05;
+  <script>
+    /* === EKRAN SAATİ === */
+    function updateTime(){
+      const now=new Date();
+      const h=String(now.getHours()).padStart(2,'0');
+      const m=String(now.getMinutes()).padStart(2,'0');
+      const s=String(now.getSeconds()).padStart(2,'0');
+      document.getElementById("time").textContent=`${h}:${m}:${s}`;
     }
+    setInterval(updateTime,1000); updateTime();
 
-    const onLen = b => (ON_MS[b]||2)/1000;
+    /* === KESİNTİSİZ IRIG-B SES MOTORU === */
+    (() => {
+      let ctx, osc, gain, run=false, nextFrameTime=0;
+      const SLOT_MS=10, ON_MS={"0":2,"1":5,"P":8};
 
-    function frameTemplate() {
-      const f = Array(100).fill("0");
-      for(let i=9;i<100;i+=10) f[i]="P";
-      return f;
-    }
-
-    const bcd = (v,n)=>Array.from({length:n},(_,i)=>(v>>i)&1?"1":"0");
-
-    function makeFrame(d){
-      const f = frameTemplate();
-      const s=d.getUTCSeconds(), m=d.getUTCMinutes(), h=d.getUTCHours(),
-            doy=Math.floor((Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())
-                  -Date.UTC(d.getUTCFullYear(),0,1))/86400000)+1,
-            y=d.getUTCFullYear()%100;
-      const w = (i,a) => a.forEach((v,k)=>{if(f[i+k]!=="P")f[i+k]=v;});
-      w(0,bcd(s%10,4)); w(4,bcd(Math.floor(s/10),3));
-      w(10,bcd(m%10,4)); w(14,bcd(Math.floor(m/10),3));
-      w(20,bcd(h%10,4)); w(24,bcd(Math.floor(h/10),2));
-      w(30,bcd(doy%10,4)); w(34,bcd(Math.floor(doy/10)%10,4));
-      w(40,bcd(Math.floor(doy/100),2));
-      w(50,bcd(y%10,4)); w(54,bcd(Math.floor(y/10),4));
-      return f;
-    }
-
-    function scheduleFrame(frame,start){
-      const g=gain.gain;
-      frame.forEach((b,i)=>{
-        const t0=start+i*SLOT_MS/1000;
-        const t1=t0+onLen(b);
-        g.setValueAtTime(0,t0);
-        g.linearRampToValueAtTime(0.9,t0+0.0005);
-        g.setValueAtTime(0.9,t1);
-        g.linearRampToValueAtTime(0,t1+0.0005);
-      });
-    }
-
-    function loop(){
-      if(!run) return;
-      const now=ctx.currentTime;
-      while(nextFrameTime < now+1.2){
-        const date=new Date(Date.now()+(nextFrameTime-ctx.currentTime)*1000);
-        const frame=makeFrame(date);
-        scheduleFrame(frame,nextFrameTime);
-        nextFrameTime+=1.0;
+      function init(){
+        if(ctx) return;
+        ctx=new (window.AudioContext||window.webkitAudioContext)();
+        osc=ctx.createOscillator(); gain=ctx.createGain();
+        osc.type="sine"; osc.frequency.value=1000;
+        gain.gain.value=0; osc.connect(gain); gain.connect(ctx.destination);
+        osc.start();
+        nextFrameTime=ctx.currentTime+0.05;
       }
-      requestAnimationFrame(loop);
-    }
 
-    function start(){
-      if(run) return;
-      init(); run=true;
-      document.getElementById("clickmsg").style.display="none";
-      loop();
-      console.log("IRIG-B SES BAŞLADI (KESİNTİSİZ)");
-    }
+      const onLen = b => (ON_MS[b]||2)/1000;
 
-    function stop(){
-      run=false;
-      try{osc.stop()}catch{}
-      try{ctx.close()}catch{}
-      ctx=osc=gain=null;
-    }
+      function frameTemplate(){
+        const f=Array(100).fill("0");
+        for(let i=9;i<100;i+=10) f[i]="P";
+        return f;
+      }
 
-    document.addEventListener("click",()=>{if(!run)start();});
-    document.addEventListener("touchstart",()=>{if(!run)start();});
-    document.addEventListener("keydown", e => {
-      if(e.code==="Space"){ e.preventDefault(); run?stop():start(); }
-    });
-    document.addEventListener("dblclick",()=>{run?stop():start();});
-  })();
-</script>
+      const bcd=(v,n)=>Array.from({length:n},(_,i)=>(v>>i)&1?"1":"0");
 
+      function makeFrame(d){
+        const f=frameTemplate();
+        const s=d.getUTCSeconds(), m=d.getUTCMinutes(), h=d.getUTCHours(),
+              doy=Math.floor((Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())
+                    -Date.UTC(d.getUTCFullYear(),0,1))/86400000)+1,
+              y=d.getUTCFullYear()%100;
+        const w=(i,a)=>a.forEach((v,k)=>{if(f[i+k]!=="P")f[i+k]=v;});
+        w(0,bcd(s%10,4)); w(4,bcd(Math.floor(s/10),3));
+        w(10,bcd(m%10,4)); w(14,bcd(Math.floor(m/10),3));
+        w(20,bcd(h%10,4)); w(24,bcd(Math.floor(h/10),2));
+        w(30,bcd(doy%10,4)); w(34,bcd(Math.floor(doy/10)%10,4));
+        w(40,bcd(Math.floor(doy/100),2));
+        w(50,bcd(y%10,4)); w(54,bcd(Math.floor(y/10),4));
+        return f;
+      }
+
+      function scheduleFrame(frame,start){
+        const g=gain.gain;
+        frame.forEach((b,i)=>{
+          const t0=start+i*SLOT_MS/1000;
+          const t1=t0+onLen(b);
+          g.setValueAtTime(0,t0);
+          g.linearRampToValueAtTime(0.9,t0+0.0005);
+          g.setValueAtTime(0.9,t1);
+          g.linearRampToValueAtTime(0,t1+0.0005);
+        });
+      }
+
+      function loop(){
+        if(!run) return;
+        const now=ctx.currentTime;
+        while(nextFrameTime<now+1.2){
+          const date=new Date(Date.now()+ (nextFrameTime-ctx.currentTime)*1000);
+          const frame=makeFrame(date);
+          scheduleFrame(frame,nextFrameTime);
+          nextFrameTime+=1.0;
+        }
+        requestAnimationFrame(loop);
+      }
+
+      function start(){
+        if(run) return;
+        init(); run=true;
+        document.getElementById("clickmsg").style.display="none";
+        loop();
+        console.log("IRIG-B SES BAŞLADI (KESİNTİSİZ)");
+      }
+
+      function stop(){
+        run=false;
+        try{osc.stop()}catch{}
+        try{ctx.close()}catch{}
+        ctx=osc=gain=null;
+      }
+
+      document.addEventListener("click",()=>{if(!run)start();});
+      document.addEventListener("touchstart",()=>{if(!run)start();});
+      document.addEventListener("keydown", e => {
+        if(e.code==="Space"){ e.preventDefault(); run?stop():start(); }
+      });
+      document.addEventListener("dblclick",()=>{run?stop():start();});
+    })();
+  </script>
 </body>
 </html>
