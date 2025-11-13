@@ -2,8 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="screen-orientation" content="landscape">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TÜRKİYE CUMHURİYETİ BURAK KOÇ İNTERNET UYDUSU GMT-3 IRIG-B SAATİ</title>
   <style>
     body {
@@ -20,15 +19,31 @@
       text-align: center;
       position: relative;
       user-select: none;
-      overflow: hidden;
     }
 
-    .logo {
+    /* Logo solda, video sağda */
+    .header {
       position: absolute;
       top: 20px;
       left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px; /* aralarındaki boşluk */
+      width: calc(100% - 40px);
+    }
+
+    .logo {
       height: 120px;
       width: auto;
+      flex-shrink: 0;
+    }
+
+    .flag-video {
+      height: 120px;
+      width: auto;
+      border-radius: 5px;
+      flex-shrink: 0;
     }
 
     .time {
@@ -56,161 +71,137 @@
       font-weight: normal;
     }
 
-    /* 📱 Dikey modda sadece uyarı göster */
-    @media screen and (orientation: portrait) {
-      body > * { display: none !important; }
-      body::before {
-        content: "📱 Lütfen telefonu yatay çevirin (yatay mod)";
-        position: fixed;
-        inset: 0;
-        background: white;
-        color: red;
-        font-size: 1.5em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-      }
-    }
-
-    /* 🔄 Küçük ekran (mobil yatay) için uyarlama */
+    /* Mobil uyumlu: yatay modda küçültme */
     @media screen and (max-width: 900px) and (orientation: landscape) {
-      .logo {
-        top: 10px;
-        left: 10px;
+      .logo, .flag-video {
         height: 60px;
       }
       .time {
-        font-size: 4.5em;
-        margin-top: 0;
+        font-size: 6em;
       }
       .info {
         font-size: 1em;
-        bottom: 60px;
-        padding: 10px 20px;
-      }
-      .clickmsg {
-        font-size: 0.9em;
       }
     }
   </style>
 </head>
 <body>
-  <img src="UYDU .png" alt="Logo" class="logo">
+  <div class="header">
+    <img src="UYDU .png" alt="Logo" class="logo">
+    <video class="flag-video" autoplay muted loop playsinline>
+      <source src="turkbayragi.mp4" type="video/mp4">
+      Tarayıcınız video etiketini desteklemiyor.
+    </video>
+  </div>
+
   <div class="time" id="time"></div>
 
   <div class="info">
     SES TONUNDA SAAT BİLGİSİ İLETİLMEKTEDİR. RECEIVER SES ÇIKIŞI IRIG-B UYUMLU SAATLERE
-         VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
-                               BİLGİLENDİRME AMAÇLIDIR.
+    VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
+    BİLGİLENDİRME AMAÇLIDIR.
   </div>
 
-  <div class="clickmsg" id="clickmsg">Başlatmak için tıklayın veya dokunun.</div>
+  <div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
 
   <script>
-/* === EKRAN SAATİ === */
-function updateTime(){
-  const now=new Date();
-  const h=String(now.getHours()).padStart(2,'0');
-  const m=String(now.getMinutes()).padStart(2,'0');
-  const s=String(now.getSeconds()).padStart(2,'0');
-  document.getElementById("time").textContent=`${h}:${m}:${s}`;
-}
-setInterval(updateTime,1000);updateTime();
-
-/* === KESİNTİSİZ IRIG-B SES MOTORU === */
-(()=> {
-  let ctx,osc,gain,run=false,nextFrameTime=0;
-  const SLOT_MS=10,ON_MS={"0":2,"1":5,"P":8};
-
-  function init(){
-    if(ctx)return;
-    ctx=new (window.AudioContext||window.webkitAudioContext)();
-    osc=ctx.createOscillator();gain=ctx.createGain();
-    osc.type="sine";osc.frequency.value=1000;
-    gain.gain.value=0;osc.connect(gain);gain.connect(ctx.destination);
-    osc.start();
-    nextFrameTime=ctx.currentTime+0.05;
-  }
-
-  const onLen=b=>(ON_MS[b]||2)/1000;
-
-  function frameTemplate(){
-    const f=Array(100).fill("0");
-    for(let i=9;i<100;i+=10)f[i]="P";
-    return f;
-  }
-
-  const bcd=(v,n)=>Array.from({length:n},(_,i)=>(v>>i)&1?"1":"0");
-
-  function makeFrame(d){
-    const f=frameTemplate();
-    const s=d.getUTCSeconds(),m=d.getUTCMinutes(),h=d.getUTCHours(),
-          doy=Math.floor((Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())
-                  -Date.UTC(d.getUTCFullYear(),0,1))/86400000)+1,
-          y=d.getUTCFullYear()%100;
-    const w=(i,a)=>a.forEach((v,k)=>{if(f[i+k]!=="P")f[i+k]=v;});
-    w(0,bcd(s%10,4));w(4,bcd(Math.floor(s/10),3));
-    w(10,bcd(m%10,4));w(14,bcd(Math.floor(m/10),3));
-    w(20,bcd(h%10,4));w(24,bcd(Math.floor(h/10),2));
-    w(30,bcd(doy%10,4));w(34,bcd(Math.floor(doy/10)%10,4));
-    w(40,bcd(Math.floor(doy/100),2));
-    w(50,bcd(y%10,4));w(54,bcd(Math.floor(y/10),4));
-    return f;
-  }
-
-  function scheduleFrame(frame,start){
-    const g=gain.gain;
-    frame.forEach((b,i)=>{
-      const t0=start+i*SLOT_MS/1000;
-      const t1=t0+onLen(b);
-      g.setValueAtTime(0,t0);
-      g.linearRampToValueAtTime(0.9,t0+0.0005);
-      g.setValueAtTime(0.9,t1);
-      g.linearRampToValueAtTime(0,t1+0.0005);
-    });
-  }
-
-  function loop(){
-    if(!run)return;
-    const now=ctx.currentTime;
-    while(nextFrameTime<now+1.2){
-      const date=new Date(Date.now()+ (nextFrameTime-ctx.currentTime)*1000);
-      const frame=makeFrame(date);
-      scheduleFrame(frame,nextFrameTime);
-      nextFrameTime+=1.0;
+    /* === EKRAN SAATİ === */
+    function updateTime(){
+      const now=new Date();
+      const h=String(now.getHours()).padStart(2,'0');
+      const m=String(now.getMinutes()).padStart(2,'0');
+      const s=String(now.getSeconds()).padStart(2,'0');
+      document.getElementById("time").textContent=`${h}:${m}:${s}`;
     }
-    requestAnimationFrame(loop);
-  }
+    setInterval(updateTime,1000); updateTime();
 
-  function start(){
-    if(run)return;
-    init();run=true;
-    document.getElementById("clickmsg").style.display="none";
-    loop();
-    console.log("IRIG-B SES BAŞLADI (KESİNTİSİZ)");
-  }
+    /* === KESİNTİSİZ IRIG-B SES MOTORU === */
+    (() => {
+      let ctx, osc, gain, run=false, nextFrameTime=0;
+      const SLOT_MS=10, ON_MS={"0":2,"1":5,"P":8};
 
-  function stop(){
-    run=false;
-    try{osc.stop()}catch{}
-    try{ctx.close()}catch{}
-    ctx=osc=gain=null;
-    document.getElementById("clickmsg").style.display="block";
-    console.log("IRIG-B SES DURDU");
-  }
+      function init(){
+        if(ctx) return;
+        ctx=new (window.AudioContext||window.webkitAudioContext)();
+        osc=ctx.createOscillator(); gain=ctx.createGain();
+        osc.type="sine"; osc.frequency.value=1000;
+        gain.gain.value=0; osc.connect(gain); gain.connect(ctx.destination);
+        osc.start();
+        nextFrameTime=ctx.currentTime+0.05;
+      }
 
-  // 🎯 Masaüstü tıklama & dokunma kontrolü
-  document.addEventListener("click",()=>{run?stop():start();});
-  document.body.addEventListener("touchstart",()=>{run?stop():start();},{passive:true});
-  document.addEventListener("keydown",e=>{
-    if(e.code==="Space"){e.preventDefault();run?stop():start();}
-  });
-  document.addEventListener("dblclick",()=>{run?stop():start();});
-})();
-</script>
+      const onLen = b => (ON_MS[b]||2)/1000;
 
+      function frameTemplate(){
+        const f=Array(100).fill("0");
+        for(let i=9;i<100;i+=10) f[i]="P";
+        return f;
+      }
+
+      const bcd=(v,n)=>Array.from({length:n},(_,i)=>(v>>i)&1?"1":"0");
+
+      function makeFrame(d){
+        const f=frameTemplate();
+        const s=d.getUTCSeconds(), m=d.getUTCMinutes(), h=d.getUTCHours(),
+              doy=Math.floor((Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())
+                    -Date.UTC(d.getUTCFullYear(),0,1))/86400000)+1,
+              y=d.getUTCFullYear()%100;
+        const w=(i,a)=>a.forEach((v,k)=>{if(f[i+k]!=="P")f[i+k]=v;});
+        w(0,bcd(s%10,4)); w(4,bcd(Math.floor(s/10),3));
+        w(10,bcd(m%10,4)); w(14,bcd(Math.floor(m/10),3));
+        w(20,bcd(h%10,4)); w(24,bcd(Math.floor(h/10),2));
+        w(30,bcd(doy%10,4)); w(34,bcd(Math.floor(doy/10)%10,4));
+        w(40,bcd(Math.floor(doy/100),2));
+        w(50,bcd(y%10,4)); w(54,bcd(Math.floor(y/10),4));
+        return f;
+      }
+
+      function scheduleFrame(frame,start){
+        const g=gain.gain;
+        frame.forEach((b,i)=>{
+          const t0=start+i*SLOT_MS/1000;
+          const t1=t0+onLen(b);
+          g.setValueAtTime(0,t0);
+          g.linearRampToValueAtTime(0.9,t0+0.0005);
+          g.setValueAtTime(0.9,t1);
+          g.linearRampToValueAtTime(0,t1+0.0005);
+        });
+      }
+
+      function loop(){
+        if(!run) return;
+        const now=ctx.currentTime;
+        while(nextFrameTime<now+1.2){
+          const date=new Date(Date.now()+ (nextFrameTime-ctx.currentTime)*1000);
+          const frame=makeFrame(date);
+          scheduleFrame(frame,nextFrameTime);
+          nextFrameTime+=1.0;
+        }
+        requestAnimationFrame(loop);
+      }
+
+      function start(){
+        if(run) return;
+        init(); run=true;
+        document.getElementById("clickmsg").style.display="none";
+        loop();
+        console.log("IRIG-B SES BAŞLADI (KESİNTİSİZ)");
+      }
+
+      function stop(){
+        run=false;
+        try{osc.stop()}catch{}
+        try{ctx.close()}catch{}
+        ctx=osc=gain=null;
+      }
+
+      document.addEventListener("click",()=>{if(!run)start();});
+      document.addEventListener("touchstart",()=>{if(!run)start();});
+      document.addEventListener("keydown", e => {
+        if(e.code==="Space"){ e.preventDefault(); run?stop():start(); }
+      });
+      document.addEventListener("dblclick",()=>{run?stop():start();});
+    })();
+  </script>
 </body>
 </html>
-
