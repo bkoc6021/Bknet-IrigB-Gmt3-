@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TÜRKİYE CUMHURİYETİ BURAK KOÇ İNTERNET UYDUSU GMT-3 IRIG-B SAATİ</title>
+<title>TÜRKİYE CUMHURİYETİ BURAK KOÇ HİBRİT UYDUSU ULUSLARASI IRIG-B SAATİ</title>
 <style>
   body {
     background-color: white;
@@ -41,26 +41,32 @@
     border-radius: 0;
   }
 
-  /* Ortalanmış container: saat + kırmızı yazı */
-  .center-container {
+  /* Ortalanmış saat */
+  .time-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    z-index: 5;
   }
 
   .time {
     font-size: 9em;
     letter-spacing: 4px;
-    margin-bottom: 40px; /* Saat ile kırmızı yazı arası boşluk */
   }
 
+  /* Kırmızı yazı: sayfanın altından 70px yukarı */
   .info {
     font-size: 1.4em;
     color: red;
     max-width: 1000px;
     line-height: 1.5em;
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
   }
 
   .clickmsg {
@@ -96,7 +102,6 @@
     }
     .time {
       font-size: 6em;
-      margin-bottom: 20px; /* Küçük ekranlarda boşluk daha az */
     }
     .info {
       font-size: 1em;
@@ -123,14 +128,16 @@
   </video>
 </div>
 
-<!-- Saat ve kırmızı yazı ortalanmış -->
-<div class="center-container">
+<!-- Saat -->
+<div class="time-container">
   <div class="time" id="time"></div>
-  <div class="info">
-    SES TONUNDA SAAT BİLGİSİ İLETİLMEKTEDİR. RECEIVER SES ÇIKIŞI IRIG-B UYUMLU SAATLERE
-    VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
-    BİLGİLENDİRME AMAÇLIDIR.
-  </div>
+</div>
+
+<!-- Kırmızı yazı -->
+<div class="info">
+  SES TONUNDA SAAT BİLGİSİ İLETİLMEKTEDİR. RECEIVER SES ÇIKIŞI IRIG-B UYUMLU SAATLERE
+  VE CİHAZLARA BAĞLANDIĞINDA, SAAT BİLGİSİ OTOMATİK OLARAK GÜNCELLEMEKTEDİR. 
+  BİLGİLENDİRME AMAÇLIDIR.
 </div>
 
 <div class="clickmsg" id="clickmsg">Başlatmak için tıklayın.</div>
@@ -144,7 +151,8 @@
     const s=String(now.getSeconds()).padStart(2,'0');
     document.getElementById("time").textContent=`${h}:${m}:${s}`;
   }
-  setInterval(updateTime,1000); updateTime();
+  setInterval(updateTime,1000); 
+  updateTime();
 
   /* === IRIG-B SES MOTORU === */
   (() => {
@@ -237,7 +245,7 @@
     function startStopAudio() {
       const rotateWarning = document.getElementById("rotateWarning");
       if (window.innerWidth < window.innerHeight) {
-        alert("Lütfen telefonu yatay hale getiriniz");
+        alert("Lütfen telefonu yatay hale getiriniz.");
         return;
       }
       requestFullscreen();
