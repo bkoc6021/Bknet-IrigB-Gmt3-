@@ -12,21 +12,22 @@
     font-weight: bold;
     margin: 0;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
     user-select: none;
   }
 
   /* Üst bar: logo ve video */
   .top-bar {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 50px;
     box-sizing: border-box;
+    z-index: 10;
   }
 
   .logo {
@@ -47,6 +48,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    z-index: 5;
   }
 
   .time {
